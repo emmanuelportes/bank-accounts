@@ -1,22 +1,22 @@
 import uuid
+from abc import ABC, abstractmethod
 
-class Account:
+class Account(ABC):
 
-    def __init__(self):
+    def __init__(self, balance: float, annual_interest_rate: float) :
+        self.balance = balance
+        self._number_of_withdrawls = 0
         self._id = self._generate_id()
-        self._balance = 0.0
+        self._number_of_monthly_deposits = 0
+        self._annual_interest_rate = annual_interest_rate
 
+    @abstractmethod
     def deposit(self, amount: float) :
-        self._validate_amount(amount)     
-        self.balance += amount
-                
+        pass
+
+    @abstractmethod    
     def withdraw(self, amount: float) :
-        self._validate_amount(amount)
-        remaining = self.balance - amount
-
-        if remaining > 0:
-            self.balance = remaining
-
+        pass
 
     @property
     def id(self) -> str :
@@ -36,8 +36,11 @@ class Account:
             raise ValueError("invalid balance provided")
         
         self._balance = balance
-       
 
+    @property
+    def annual_interest_rate(self):
+        return self._annual_interest_rate
+           
     def _validate_amount(self, amount: float) :
            
            if not isinstance(amount, float):
@@ -48,10 +51,3 @@ class Account:
     
     def _generate_id(self) -> str:
         return uuid.uuid4()
-
-
-acc = Account()
-
-acc.deposit(100.0)
-print(acc.balance)
-print(acc.id)

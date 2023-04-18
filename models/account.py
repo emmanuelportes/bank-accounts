@@ -5,31 +5,36 @@ class Account(ABC):
 
     def __init__(self, balance: float, annual_interest_rate: float) :
         self.balance = balance
-        self.number_of_withdrawls = 0
+        self.number_of_withdrawals = 0
         self._id = self._generate_id()
+        self._service_charges = 0
         self.number_of_monthly_deposits = 0
-        self._annual_interest_rate = annual_interest_rate
+        self._ANNUAL_INTEREST_RATE = annual_interest_rate
+        self._ZERO = 0
 
     def deposit(self, amount: float) :
-
         self._validate_amount(amount)
         self.balance = self.balance + amount
         self.number_of_monthly_deposits += 1
 
     def withdraw(self, amount: float) :
-
         self._validate_amount(amount)
         remaining_balance = self.balance - amount
 
-        if remaining_balance >= 0 :
+        if remaining_balance.__ge__(self._ZERO) :
             self.balance -= self.balance - amount
-            self.number_of_withdrawls += 1
+            self.number_of_withdrawals += 1
 
     def calculate_interest(self) :
-        pass
+        monthly_interest_rate = (self._ANNUAL_INTEREST_RATE/12)
+        monthly_interest = self.balance * monthly_interest_rate
+        self.balance += monthly_interest
 
     def monthly_process(self) :
-        pass
+        self.balance -= self._service_charges
+        self.calculate_interest()
+        self.number_of_monthly_deposits = 0
+        self.number_of_withdrawals = 0
 
     @property
     def id(self) -> str :

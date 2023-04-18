@@ -1,26 +1,43 @@
 import uuid
-from abc import ABC, abstractmethod
+from abc import ABC
 
 class Account(ABC):
 
     def __init__(self, balance: float, annual_interest_rate: float) :
         self.balance = balance
-        self._number_of_withdrawls = 0
+        self.number_of_withdrawls = 0
         self._id = self._generate_id()
-        self._number_of_monthly_deposits = 0
+        self.number_of_monthly_deposits = 0
         self._annual_interest_rate = annual_interest_rate
 
-    @abstractmethod
     def deposit(self, amount: float) :
+
+        self._validate_amount(amount)
+        self.balance = self.balance + amount
+        self.number_of_monthly_deposits += 1
+
+    def withdraw(self, amount: float) :
+
+        self._validate_amount(amount)
+        remaining_balance = self.balance - amount
+
+        if remaining_balance >= 0 :
+            self.balance -= self.balance - amount
+            self.number_of_withdrawls += 1
+
+    def calculate_interest(self) :
         pass
 
-    @abstractmethod    
-    def withdraw(self, amount: float) :
+    def monthly_process(self) :
         pass
 
     @property
     def id(self) -> str :
         return self._id
+    
+    @property
+    def annual_interest_rate(self):
+        return self._annual_interest_rate
 
     @property
     def balance(self) -> float :
@@ -37,10 +54,6 @@ class Account(ABC):
         
         self._balance = balance
 
-    @property
-    def annual_interest_rate(self):
-        return self._annual_interest_rate
-           
     def _validate_amount(self, amount: float) :
            
            if not isinstance(amount, float):

@@ -50,7 +50,6 @@ class Account(ABC):
     
     @balance.setter
     def balance( self, balance: float) :
-
         if not isinstance(balance, float) :
             raise TypeError("invalid value type provided") 
         
@@ -59,8 +58,7 @@ class Account(ABC):
         
         self._balance = balance
 
-    def _validate_amount(self, amount: float) :
-           
+    def _validate_amount(self, amount: float) : 
            if not isinstance(amount, float):
                raise TypeError("invalid value type provided")
            

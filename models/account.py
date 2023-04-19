@@ -25,16 +25,16 @@ class Account(ABC):
             self.balance -= self.balance - amount
             self.number_of_withdrawals += 1
 
-    def calculate_interest(self) :
-        monthly_interest_rate = (self._ANNUAL_INTEREST_RATE/12)
+    def _calculate_interest(self) :
+        monthly_interest_rate = (self._ANNUAL_INTEREST_RATE / 12)
         monthly_interest = self.balance * monthly_interest_rate
         self.balance += monthly_interest
 
-    def monthly_process(self) :
+    def _monthly_process(self) :
         self.balance -= self._service_charges
-        self.calculate_interest()
         self.number_of_monthly_deposits = 0
         self.number_of_withdrawals = 0
+        self.calculate_interest()
 
     @property
     def id(self) -> str :

@@ -34,7 +34,7 @@ class Account(ABC):
         self.balance -= self._service_charges
         self.number_of_monthly_deposits = 0
         self.number_of_withdrawals = 0
-        self.calculate_interest()
+        self._calculate_interest()
 
     @property
     def id(self) -> str :

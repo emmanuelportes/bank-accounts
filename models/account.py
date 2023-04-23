@@ -21,7 +21,7 @@ class Account(ABC):
         self._validate_amount(amount)
         remaining_balance = self.balance - amount
 
-        if remaining_balance.__ge__(self._ZERO) :
+        if remaining_balance > (self._ZERO) :
             self.balance -= self.balance - amount
             self.number_of_withdrawals += 1
 

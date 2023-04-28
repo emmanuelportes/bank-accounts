@@ -4,7 +4,7 @@ from abc import ABC
 class Account(ABC):
 
     def __init__(self, balance: float, annual_interest_rate: float) :
-        self.balance = balance
+        self.balance = self._check_opening_balance(balance)
         self.number_of_withdrawals = 0
         self._id = self._generate_id()
         self._service_charges = 0
@@ -21,8 +21,8 @@ class Account(ABC):
         self._validate_amount(amount)
         remaining_balance = self.balance - amount
 
-        if remaining_balance > (self._ZERO) :
-            self.balance -= self.balance - amount
+        if remaining_balance > self._ZERO :
+            self.balance -= amount
             self.number_of_withdrawals += 1
 
     def _calculate_interest(self) :
@@ -36,13 +36,20 @@ class Account(ABC):
         self.number_of_withdrawals = 0
         self._calculate_interest()
 
+    def _check_opening_balance(self, amount:float):
+        INITIAL_AMOUNT: float = 500.0
+        if amount >= INITIAL_AMOUNT:
+            return amount
+        
+        raise ValueError(f"opening deposit must be above 500.0. currently: {amount}")
+
     @property
     def id(self) -> str :
         return self._id
     
     @property
     def annual_interest_rate(self):
-        return self._annual_interest_rate
+        return self._ANNUAL_INTEREST_RATE
 
     @property
     def balance(self) -> float :
@@ -59,11 +66,12 @@ class Account(ABC):
         self._balance = balance
 
     def _validate_amount(self, amount: float) : 
-           if not isinstance(amount, float):
-               raise TypeError("invalid value type provided")
+        if isinstance(amount, float) or isinstance(amount, int):
+            return
+        elif amount <= 0.0 :
+            raise ValueError("invalid amount provided")
+        else:
+            raise TypeError("invalid value type provided")
            
-           if amount <= 0.0 :
-               raise ValueError("invalid amount provided")
-    
     def _generate_id(self) -> str:
         return uuid.uuid4()
